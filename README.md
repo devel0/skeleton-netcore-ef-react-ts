@@ -134,3 +134,20 @@ of course for an online usage an https crypt required ( for that use nginx and a
 - fake authentication ( need to implement your own auth logic )
 - two buttons ( add creates new record, get retrieve list of record )
 - database store ( eg. [ExampleStore](srvapp/ClientApp/src/components/store/ExampleStore.tsx) ) uses [react-hookstore](https://github.com/jhonnymichel/react-hookstore#readme) to allow working on store from any part of the code with reflection of [result](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/components/Home.tsx#L35)
+- Date() in javascript is an object implicitly local time while Date in c# can have kind between UTC, Local and Unspecified ; here I use DateTime UTC for server side while Date localtime for client side and webapi automatically does the job of conversion because c# UTC Date serialize to iso format that javascript read and interpret correctly from utc to localtime.
+
+**keynotes**
+
+- server
+    - [setup of Newtonsoft JSON](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Startup.cs#L33-L36) serializer to preserve ref
+    - connect [Global](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Startup.cs#L40) singleton
+    - add [db context](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Startup.cs#L44-L49) with [npgsql plugin](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Startup.cs#L124-L126)
+    - webapi generic [request](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Types/CommonRequest.cs#L12-L16) and [response](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Types/CommonResponse.cs#L40-L44)
+    - db context [ctx](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Controllers/CommonController.cs#L26) injected into common controller
+    - db connect on a [config.json](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Code/Config.cs#L11)
+    - [add](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Controllers/ExampleController.cs#L21-L41) and [list](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Controllers/ExampleController.cs#L43-L60) webapi samples
+    - design [constraint of tables](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/Types/db/SampleTable.cs#L13) through interfaces
+- client
+    - version app request [update check](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/index.tsx#L22)
+    - general [layout](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/App.tsx#L32-L51) with appbar and router switch with public and private routes
+    - [error page](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/components/ErrorPage.tsx#L69) that shows server exception
