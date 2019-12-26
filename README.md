@@ -1,5 +1,17 @@
 # skeleton netcore ef react ts
 
+skeleton for netcore, db ef code-first ( server side ) + react typescript, json preserve ref ( client side ) solution and docker builder
+
+---
+
+- [features](#features)
+- [requirements](#requirements)
+- [quickstart](#quickstart)
+- [build and run container](#build-and-run-container)
+- [update database and diagram](#update-database-and-diagram)
+
+---
+
 ## features
 
 - single solution debug ( just open in code, hit F5, to debug server and client )
@@ -105,10 +117,16 @@ of course for an online usage an https crypt required ( for that use nginx and a
 ## update database and diagram
 
 - create/modify tables in `srvapp/Types/db`
-- edit `srvapp/MyDbContext.cs` to add [set]() and [constraints]() such as indexes, unique indexes if required
+- edit `srvapp/MyDbContext.cs` to add [set](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/MyDbContext.cs#L112-L114) and [constraints](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/MyDbContext.cs#L89-L98) such as indexes, unique indexes if required
 - execute a new migration `./add-migr.sh`
 
 **about Migrations folder**
 
 - :warning: `srvapp/Migrations` folder not in git ( because other developers may work on other stage of migrations on other database hosts )
 - take care to maintain `Migrations` for official or production database in order to apply new migrations
+
+## description of example
+
+- fake authentication ( need to implement your own auth logic )
+- two buttons ( add creates new record, get retrieve list of record )
+- database store ( eg. [ExampleStore](srvapp/ClientApp/src/components/store/ExampleStore.tsx) ) uses [react-hookstore](https://github.com/jhonnymichel/react-hookstore#readme) to allow working on store from any part of the code with reflection of [result](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/components/Home.tsx#L35)
