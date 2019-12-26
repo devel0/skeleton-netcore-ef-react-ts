@@ -8,22 +8,23 @@ if [ ! -e /opt/schemacrawler/_schemacrawler/schemacrawler.sh ]; then
 	exit 1
 fi
 
-if [ ! -e !/.pgpass ]; then
+if [ ! -e ~/.pgpass ]; then
 	echo "can't find ~/.pgpass"
 	exit 1
 fi
 
-pgpass=$(cat ~/.pgpass | grep $dbhost | awk -F ':' '{print $5}')
+# set your db host
+dbhost=localhost
+dbname=srvdb
+
+pgpass="$(cat ~/.pgpass | grep $dbhost | awk -F ':' '{print $5}')"
+
 if [ "$pgpass" == "" ]; then
 	echo "can't find ~/.pgpass pass for dbhost=[$dbhost]"
 	exit 1
 fi
 
 cd "$exdir"/doc/db
-
-# set your db host
-dbhost=localhost
-dbname=srvdb
 
 SC_GRAPHVIZ_OPTS='-Granksep=1.5' /opt/schemacrawler/_schemacrawler/schemacrawler.sh \
     --log-level=SEVERE \
