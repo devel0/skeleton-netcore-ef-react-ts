@@ -12,6 +12,8 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 
 ---
 
+![](doc/example.gif)
+
 ## features
 
 - single solution debug ( just open in code, hit F5, to debug server and client )
@@ -115,6 +117,8 @@ try connect to `http://localhost:5555`
 of course for an online usage an https crypt required ( for that use nginx and a letsencrypt certificate )
 
 ## update database and diagram
+
+![](doc/db/db.png)
 
 - create/modify tables in `srvapp/Types/db`
 - edit `srvapp/MyDbContext.cs` to add [set](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/MyDbContext.cs#L112-L114) and [constraints](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/MyDbContext.cs#L89-L98) such as indexes, unique indexes if required
