@@ -12,7 +12,7 @@ namespace srvapp
             //
             // set type for DateTime
             //
-            //builder.Substitute(typeof(System.DateTime), new RtSimpleTypeName("Date"));
+            builder.Substitute(typeof(System.DateTime), new RtSimpleTypeName("Date"));
 
             //
             // global configuration
