@@ -5,5 +5,4 @@
 export interface ICommonRequest
 {
 	authToken: string;
-	utcMinutesOffset: number;
 }

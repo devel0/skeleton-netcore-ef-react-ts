@@ -22,7 +22,7 @@
 
 ## quickstart
 
-### clone
+**clone**
 
 ```sh
 git clone https://github.com/devel0/skeleton-netcore-ef-react-ts.git YOURPRJ
@@ -30,32 +30,52 @@ cd YOURPRJ
 code .
 ```
 
-### configure your variables
+**configure your variables**
 
 | token | description |
 |---|---|
 | srvapp | name of the application server+client |
 | srvdb | name of database |
+
+| variable | description |
+|---|---|
 | dbhost | host of database |
 | dbname | name of database |
 
-### set pgpass for dev db scripts
+| file | tokens to replace |
+|---|---|
+| add-migr.sh | srvapp |
+| build.sh | srvapp |
+| Dockerfile | srvapp |
+| gen-ts.sh | srvapp |
+| gen-db-dia.sh | srvdb, dbname, dbhost |
+| get-cur-ver.sh | srvdb |
+| inc-version.sh | srvapp, srvdb |
+| srvapp/Code/Global.cs | srvapp, srvdb, dbname, dbhost |
+
+**set pgpass for dev db scripts**
 
 - [see here](https://github.com/devel0/knowledge/blob/4275a7062f0126631d961afbd0c9d5b5154002d7/doc/psql-password-in-file.md)
 
-### tune config.json
+**tune config.json**
 
 - hit F5 first time to autocreate `~/.config/srvapp/config.json` file
 - tune variables into `config.json` to allow server db connection ( note: if use localhost instead an ip then config will not work for dockerized version )
 
-### create database and apply first migration
+**create database and apply first migration**
 
 ```sh
 echo "create database srvdb | psql -h localhost -U postgres"
 ./add-migr.sh
 ```
 
-### start
+**autgen typescript**
+
+```sh
+./gen-ts.sh
+```
+
+**start**
 
 - from `CTRL+SHIFT+D` select `.NET Core Launch (web)`
 - hit F5 from vscode to start server-client
@@ -72,8 +92,6 @@ output
 
 ```
 ---> env.EnvironmentName=[Production] ; env.IsDevelopment=False
-warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
-      No XML encryptor configured. Key {db173e85-4a34-497e-9559-0ad8da926988} may be persisted to storage in unencrypted form.
 Hosting environment: Production
 Content root path: /app
 Now listening on: http://[::]:5000
@@ -90,7 +108,7 @@ of course for an online usage an https crypt required ( for that use nginx and a
 - edit `srvapp/MyDbContext.cs` to add [set]() and [constraints]() such as indexes, unique indexes if required
 - execute a new migration `./add-migr.sh`
 
-### about Migrations folder
+**about Migrations folder**
 
 - :warning: `srvapp/Migrations` folder not in git ( because other developers may work on other stage of migrations on other database hosts )
 - take care to maintain `Migrations` for official or production database in order to apply new migrations

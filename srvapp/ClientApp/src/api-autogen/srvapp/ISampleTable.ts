@@ -5,8 +5,8 @@
 export interface ISampleTable
 {
 	id: number;
-	/** create timestamp ( UTC ) */
+	/** create timestamp ( server:UTC js:LOCAL ) */
 	create_timestamp: any;
-	/** user timestamp ( UTC ) */
+	/** user timestamp ( serveR:UTC js:LOCAL ) */
 	user_timestamp: any;
 }
