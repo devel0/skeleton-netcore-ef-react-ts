@@ -94,8 +94,6 @@ echo "create database srvdb | psql -h localhost -U postgres"
 - from `CTRL+SHIFT+D` select `.NET Core Launch (web)`
 - hit F5 from vscode to start server-client
 
-from vscode terminal ``ctrl+` ``
-
 ## build and run container
 
 ```sh
