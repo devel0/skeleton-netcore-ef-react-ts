@@ -132,7 +132,10 @@ of course for an online usage an https crypt required ( for that use nginx and a
 - fake authentication ( need to implement your own auth logic )
 - two buttons ( add creates new record, get retrieve list of record )
 - database store ( eg. [ExampleStore](srvapp/ClientApp/src/components/store/ExampleStore.tsx) ) uses [react-hookstore](https://github.com/jhonnymichel/react-hookstore#readme) to allow working on store from any part of the code with reflection of [result](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/90c6e00a56434fba57119c708f7803b3ef3dffc5/srvapp/ClientApp/src/components/Home.tsx#L35)
-- Date() in javascript is an object implicitly local time while Date in c# can have kind between UTC, Local and Unspecified ; here I use DateTime UTC for server side while Date localtime for client side and webapi automatically does the job of conversion because c# UTC Date serialize to iso format that javascript read and interpret correctly from utc to localtime.
+- Datetime
+    - in C# DateTime can store Kind local, utc or unspecified and npgsql DateTime gets back from DB as Unspecified so a [little auto-conversion](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/cc4bfcf1700708628c18be6b98bb2e69586b625d/srvapp/Types/db/SampleTable.cs#L26) needed
+    - in Javascript Date mean only localtime
+    - when C# DateTime is correcly kinded to UTC will serialized into json as "Z" ending ( utc time ) and correctly converted back when [parseRefsResponse](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/cc4bfcf1700708628c18be6b98bb2e69586b625d/srvapp/ClientApp/src/components/store/ExampleStore.tsx#L67) into objet
 
 **keynotes**
 
