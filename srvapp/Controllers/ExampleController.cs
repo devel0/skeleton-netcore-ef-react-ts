@@ -46,10 +46,10 @@ namespace srvapp.Controllers
             try
             {
                 if (!checkAuth(req)) return InvalidAuthResponse();
-                
+                var q = ctx.SampleTables.ToList();
                 return new TemplatedResponse<List<SampleTable>>
                 {                    
-                    data = ctx.SampleTables.ToList()
+                    data = q
                 };
             }
             catch (Exception ex)

@@ -13,10 +13,10 @@ import { ICommonResponse } from '../../api-autogen/srvapp/ICommonResponse';
 
 export class ExampleStore {
     constructor() {
-        this.apiResult = "";
+        this.apiData = [];        
     }
 
-    apiResult: string;
+    apiData: ISampleTable[];    
 }
 
 export const useExample = () => useStoreNfo<ExampleStore>("example");
@@ -64,7 +64,7 @@ export function getExamples(system: storeNfo<SystemStore>, example: storeNfo<Exa
         })
         .then(response => {
             if (response.ok)
-                return parseRefsResponse<ITemplatedResponse<string>>(response.text());
+                return parseRefsResponse<ITemplatedResponse<ISampleTable[]>>(response.text());
             else {
                 throw "status=" + response.status;
             }
@@ -72,8 +72,10 @@ export function getExamples(system: storeNfo<SystemStore>, example: storeNfo<Exa
         .then(data => {
             system.set((x) => x.loading = false);
             if (checkApiResult(data)) {
-                const res = stringifyRefs(data.data, null, 1);                
-                example.set((x) => x.apiResult = res);
+                
+                example.set((x) => {
+                    x.apiData = data.data;                    
+                });
             }
             else {
                 notifyException(system, data);
