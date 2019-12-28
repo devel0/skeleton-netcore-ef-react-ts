@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useLayoutEffect } from "react";
+import React, { useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import { Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent } from "@material-ui/core";
 
 export enum AlertDialogButtons {
@@ -33,8 +33,36 @@ const AlertDialogBtns = (props: AlertDialogProps) => {
         }
     }, [btnYesRef, btnNoRef, btnCancelRef]);
 
+    const handleKeydown = (e: KeyboardEvent) => {
+        const btns = props.buttons === undefined ? [AlertDialogButtons.Yes, AlertDialogButtons.No] : props.buttons;
+
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            let curBtn = 0;
+            if (btnYesRef.current && document.activeElement === btnYesRef.current) curBtn = 0;
+            else if (btnNoRef.current && document.activeElement === btnNoRef.current) curBtn = 1;
+            else if (btnCancelRef.current && document.activeElement === btnCancelRef.current) curBtn = 2;
+
+            if (e.key === "ArrowRight") curBtn = (curBtn === btns.length - 1) ? 0 : (curBtn + 1);
+            else if (e.key === "ArrowLeft") curBtn = (curBtn === 0) ? (btns.length - 1) : (curBtn - 1);
+
+            switch (btns[curBtn]) {
+                case AlertDialogButtons.Yes: if (btnYesRef.current) btnYesRef.current.focus(); break;
+                case AlertDialogButtons.No: if (btnNoRef.current) btnNoRef.current.focus(); break;
+                case AlertDialogButtons.Cancel: if (btnCancelRef.current) btnCancelRef.current.focus(); break;
+            }
+        }
+    };
+
+    const divRef = useRef<HTMLDivElement>(null);
+    useLayoutEffect(() => {
+        if (divRef.current) divRef.current.addEventListener("keydown", handleKeydown, { passive: true });
+        return () => {
+            if (divRef.current) divRef.current.removeEventListener("keydown", handleKeydown);
+        }
+    }, [divRef, props]);
+
     return (
-        <div>
+        <div ref={divRef}>
             {(props.buttons === undefined || props.buttons.indexOf(AlertDialogButtons.Yes) !== -1) ?
                 <Button ref={btnYesRef} onClick={() => props.onClose(AlertDialogButtons.Yes)} color="primary">Si</Button> : null}
 
@@ -49,7 +77,7 @@ const AlertDialogBtns = (props: AlertDialogProps) => {
 
 export default function AlertDialog(props: AlertDialogProps) {
     return (
-        <div>            
+        <div>
             <Dialog
                 open={props.open}
                 onClose={() => props.onClose()}
