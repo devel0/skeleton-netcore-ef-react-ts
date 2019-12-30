@@ -32,7 +32,7 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 - (optional) for db diagramming install [schema crawler](https://github.com/devel0/knowledge/blob/4275a7062f0126631d961afbd0c9d5b5154002d7/doc/psql-schema-crawler.md#L3-L9)
 - (optional) for deploy in docker
     - [docker-ubuntu](https://github.com/devel0/docker-ubuntu/blob/c22ed8a57767a23c6af0ea814f693035e67a8351/README.md#L7-L12)
-    - [docker-dotnet](https://github.com/devel0/docker-dotnet/blob/a7e3f3312e5f8aa66c7c401d89daf3c7b0a1dae4/README.md#L12-L17)
+    - [docker-dotnet](https://github.com/devel0/docker-dotnet/blob/b1d4f3be7938505cbd48e460e7274398b85a4d32/README.md#L11-L16)
 
 ## quickstart
 

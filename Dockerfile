@@ -1,7 +1,7 @@
-FROM searchathing/dotnet:3.0.100-sdk AS base
+FROM searchathing/dotnet:3.1-sdk AS base
 WORKDIR /app
 
-FROM searchathing/dotnet:3.0.100-sdk AS build
+FROM searchathing/dotnet:3.1-sdk AS build
 
 # cache nuget
 WORKDIR /src/srvapp
