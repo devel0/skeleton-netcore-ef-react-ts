@@ -15,7 +15,7 @@ dotnet build "$exdir"/srvapp
 cp -f "$DOTNET_ROOT"/shared/Microsoft.AspNetCore.App/3.0.0/* "$exdir"/srvapp/bin/Debug/netcoreapp3.0/
 
 dstapi="$exdir/srvapp/ClientApp/src/api-autogen/"
-rm -fr $"dstapi"
+rm -fr "$dstapi"
 
 dotnet ~/.nuget/packages/reinforced.typings/1.5.6/tools/netcoreapp3.0/rtcli.dll \
 	SourceAssemblies="$exdir/srvapp/bin/Debug/netcoreapp3.0/srvapp.dll" \
