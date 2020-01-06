@@ -8,7 +8,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/srvapp/bin/Debug/netcoreapp3.0/srvapp.dll",
+            "program": "${workspaceFolder}/srvapp/bin/Debug/netcoreapp3.1/srvapp.dll",
             "args": [],
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -23,7 +23,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/srvapp/bin/Debug/netcoreapp3.0/srvapp.dll",
+            "program": "${workspaceFolder}/srvapp/bin/Debug/netcoreapp3.1/srvapp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/srvapp",
             "stopAtEntry": false,

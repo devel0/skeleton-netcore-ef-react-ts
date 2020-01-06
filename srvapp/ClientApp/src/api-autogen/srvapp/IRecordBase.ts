@@ -2,10 +2,8 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-import { IRecordBase } from './IRecordBase';
-import { IIRecord } from './IIRecord';
-
-export interface ISystemConfig extends IRecordBase, IIRecord
+export interface IRecordBase
 {
-	other_info: string;
+	id: number;
+	update_timestamp?: Date;
 }

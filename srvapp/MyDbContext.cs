@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using SearchAThing.PsqlUtil;
+using SearchAThing;
+using static SearchAThing.UtilExt;
 
 namespace srvapp
 {
@@ -44,6 +51,67 @@ namespace srvapp
             }
         }
 
+
+        public void DebugChanges(bool breakIf = false)
+        {
+#if DEBUG
+            ChangeTracker.DetectChanges();
+            if (ChangeTracker.Entries().Where(r => r.State == EntityState.Added || r.State == EntityState.Modified).Count() > 0)
+            {
+                if (PrintChanges() && breakIf)
+                {
+                    Debugger.Break();
+                }
+                Console.WriteLine(Environment.StackTrace.ToString());
+            }
+#endif
+        }
+
+        bool PrintChanges()
+        {
+            var added_entries = new List<EntityEntry>();
+            var modified_entries = new List<EntityEntry>();
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added: added_entries.Add(entry); break;
+                    case EntityState.Modified: modified_entries.Add(entry); break;
+                }
+            }
+
+            var found_some = false;
+
+            foreach (var entry in modified_entries)
+            {
+                var origValues = entry.OriginalValues;
+                var record = entry.Entity as IRecordBase;
+                if (record != null)
+                {
+                    Console.WriteLine($"==== UPDATED ENTRY [{entry.Entity.GetType().ToString()}] id:{record.id}");
+
+                    foreach (var cur in entry.CurrentValues.Properties)
+                    {
+                        var origProp = entry.OriginalValues.Properties.FirstOrDefault(w => w.Name == cur.Name);
+                        if (origProp != null && origProp.PropertyInfo != null)
+                        {
+                            var origVal = entry.OriginalValues[cur.Name];
+                            var curVal = entry.CurrentValues[cur.Name];
+
+                            if ((origVal == null ^ curVal == null) || (origVal != null && curVal != null && !origVal.Equals(curVal)))
+                            {
+                                Console.WriteLine($"  -- prop[{cur.Name}] changed from {JsonConvert.SerializeObject(origVal)} to {JsonConvert.SerializeObject(curVal)}");
+                            }
+
+                            found_some = true;
+                        }
+                    }
+                }
+            }
+
+            return found_some;
+        }
+
         void CheckValidate(IEnumerable<object> entities)
         {
             foreach (var entity in entities)
@@ -57,11 +125,27 @@ namespace srvapp
         {
             if (Program.MainStarted) // avoid to process these if in migrations
             {
-                var entities = from e in ChangeTracker.Entries()
-                               where e.State == EntityState.Added || e.State == EntityState.Modified
-                               select e.Entity;
+                var added_entries = new List<EntityEntry>();
+                var modified_entries = new List<EntityEntry>();
+                foreach (var entry in ChangeTracker.Entries())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added: added_entries.Add(entry); break;
+                        case EntityState.Modified: modified_entries.Add(entry); break;
+                    }
+                }
 
-                CheckValidate(entities);
+                CheckValidate(added_entries);
+                CheckValidate(modified_entries);
+
+                foreach (var entry in modified_entries)
+                {
+                    var record = entry.Entity as IRecord;
+
+                    // EP: TRIGGER UPDATE
+                    record.update_timestamp = DateTime.UtcNow;
+                }
             }
         }
 
@@ -87,6 +171,12 @@ namespace srvapp
             base.OnModelCreating(builder);
 
             //
+            // MAPPING ( **note** : ORDER ENTITY DECLARATIONS )
+            //            
+
+            builder.Entity<SampleTable>();
+
+            //
             // INDEX
             //                        
             //builder.Entity<SampleTable>().HasIndex(x => new { x.field });            
@@ -94,7 +184,25 @@ namespace srvapp
             //
             // UNIQUE INDEX
             //
-            //builder.Entity<SampleTable>().HasIndex("id_a", "b").IsUnique();            
+            //builder.Entity<SampleTable>().HasIndex("id_a", "b").IsUnique();     
+
+            //
+            // INDEX through entity types
+            //
+            {
+                foreach (var ent in builder.Model.GetEntityTypes())
+                {
+                    var entName = ent.Name;
+                    var entType = ent.ClrType;
+
+                    Console.WriteLine($"=== ENT NAME [{entName}]");
+
+                    if (typeof(IRecordBase).IsAssignableFrom(entType))
+                    {
+                        builder.Entity(entType).HasIndex(GetMemberNames<IRecordBase>(x => new { x.update_timestamp }).ToArray());
+                    }
+                }
+            }
 
             //
             // DELETE BEHAVIOR

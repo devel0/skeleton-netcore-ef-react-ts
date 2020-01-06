@@ -3,13 +3,10 @@
 //     the code is regenerated.
 
 import { IRecordBase } from './IRecordBase';
-import { IIRecord } from './IIRecord';
 
-export interface ISampleTable extends IRecordBase, IIRecord
+export interface IIRecord extends IRecordBase
 {
-	/** create timestamp ( server:UTC js:LOCAL ) */
-	create_timestamp: Date;
+	id: number;
 	/** user timestamp ( serveR:UTC js:LOCAL ) */
-	user_timestamp: Date;
-	touch_data: number;
+	update_timestamp?: Date;
 }

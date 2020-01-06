@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSystem } from './store/SystemStore';
 import { Button, TextField, Grid, Box, Typography } from '@material-ui/core';
-import { useExample, getExamples, addExample } from './store/ExampleStore';
-import { ISampleTable } from '../api-autogen/srvapp/ISampleTable';
+import { useExample, getExamples, addExample, touchExample } from './store/ExampleStore';
 import { useWindowSize } from 'react-ws-canvas';
 import { stringifyRefs } from 'json-serialize-refs';
+import { ISampleTable } from '../api-autogen/srvapp/ISampleTable';
 
 export default function Home() {
   const system = useSystem();
@@ -22,6 +22,13 @@ export default function Home() {
               } as ISampleTable)
             }}>ADD</Button>
           </Grid>
+
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={() => {
+              touchExample(system)
+            }}>TOUCH</Button>
+          </Grid>
+
           <Grid item>
             <Button variant="contained" color="primary" onClick={() => {
               getExamples(system, example)

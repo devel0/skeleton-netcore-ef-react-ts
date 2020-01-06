@@ -1,21 +1,15 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Newtonsoft.Json;
 using Reinforced.Typings.Attributes;
 using SearchAThing;
 
 namespace srvapp
 {
 
-    [TsInterface]
+    [TsInterface(AutoExportMethods = false)]
     [Table("sample_table")]
-    public class SampleTable : IRecordBase
+    public class SampleTable : IRecord
     {
-
-        [Key]
-        public int id { get; set; }
 
         DateTime _create_timestamp;
         /// <summary>
@@ -36,6 +30,8 @@ namespace srvapp
             get { return _user_timestamp.UnspecifiedAsUTCDateTime(); }
             set { _user_timestamp = value; }
         }
+
+        public int touch_data { get; set; }
 
     }
 

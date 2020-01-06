@@ -1,8 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Newtonsoft.Json;
 using Reinforced.Typings.Attributes;
 
 namespace srvapp
@@ -10,12 +6,11 @@ namespace srvapp
 
     [TsInterface]
     [Table("system_config")]
-    public class SystemConfig : IRecordBase
-    {
+    public class SystemConfig : IRecord
+    {        
 
-        [Key]
-        public int id { get; set; }
-
+        public string other_info { get; set; }
+        
     }
 
 }

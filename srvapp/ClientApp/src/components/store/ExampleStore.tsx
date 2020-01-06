@@ -8,6 +8,7 @@ import { ITemplatedResponse } from '../../api-autogen/srvapp/ITemplatedResponse'
 import { ISampleTable } from '../../api-autogen/srvapp/ISampleTable';
 import { ITemplatedRequest } from '../../api-autogen/srvapp/ITemplatedRequest';
 import { ICommonResponse } from '../../api-autogen/srvapp/ICommonResponse';
+import { ICommonRequest } from '../../api-autogen/srvapp/ICommonRequest';
 
 // edit also App.tsx ( entrypoint: create stores )
 
@@ -24,11 +25,6 @@ export const useExample = () => useStoreNfo<ExampleStore>("example");
 export function addExample(system: storeNfo<SystemStore>, sample: ISampleTable) {
     system.set((x) => x.loading = true);
 
-    const q = Object.assign(defaultRequest(), {
-        data: sample
-    } as ITemplatedRequest<ISampleTable>);
-    var qj = stringifyRefs(q);
-
     fetch('example/addSample',
         {
             method: 'post',
@@ -36,6 +32,31 @@ export function addExample(system: storeNfo<SystemStore>, sample: ISampleTable) 
             body: stringifyRefs(Object.assign(defaultRequest(), {
                 data: sample
             } as ITemplatedRequest<ISampleTable>))
+        })
+        .then(response => parseRefsResponse<ICommonResponse>(response.text()))
+        .then(data => {
+            system.set((x) => x.loading = false);
+            if (checkApiResult(data)) {
+                notifySuccess("data saved");
+            } else {
+                notifyException(system, data);
+                system.set((x) => x.loading = false);
+            }
+        })
+        .catch((reason) => {
+            notifyError("error [" + reason + "]");
+            system.set((x) => x.loading = false);
+        });
+}
+
+export function touchExample(system: storeNfo<SystemStore>) {
+    system.set((x) => x.loading = true);    
+    
+    fetch('example/touchSamples',
+        {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json', },
+            body: stringifyRefs(Object.assign(defaultRequest(), {}))
         })
         .then(response => parseRefsResponse<ICommonResponse>(response.text()))
         .then(data => {

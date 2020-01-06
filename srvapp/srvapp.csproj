@@ -21,7 +21,7 @@
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
         <PackageReference Include="netcore-ef-util" Version="1.0.1" />
         <PackageReference Include="netcore-psql-util" Version="1.0.3" />
-        <PackageReference Include="netcore-util" Version="1.1.0" />
+        <PackageReference Include="netcore-util" Version="1.2.1" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0" />
         <PackageReference Include="Reinforced.Typings" Version="1.5.6" />
