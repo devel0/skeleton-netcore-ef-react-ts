@@ -10,6 +10,10 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 - [quickstart](#quickstart)
 - [build and run container](#build-and-run-container)
 - [update database and diagram](#update-database-and-diagram)
+  * [backup migrations](#backup-migrations)
+  * [restore migrations](#restore-migrations)
+  * [automatic backup/restore migration test](#automatic-backuprestore-migration-test)
+- [description of example](#description-of-example)
 
 ---
 
@@ -17,6 +21,7 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 
 ## recent changes
 
+- automatic backup/restore migrations
 - dialog `msg` interpret html
 - react-scripts 3.3.0 ( support optional chaining )
 - centralized webapi try catch
@@ -67,6 +72,7 @@ code .
 | file | tokens to replace |
 |---|---|
 | add-migr.sh | srvapp |
+| backup-migr.sh, restore-migr.sh | srvapp |
 | build.sh | srvapp |
 | Dockerfile | srvapp |
 | gen-ts.sh | srvapp |
@@ -142,6 +148,101 @@ of course for an online usage an https crypt required ( for that use nginx and a
 
 - :warning: `srvapp/Migrations` folder not in git ( because other developers may work on other stage of migrations on other database hosts )
 - take care to maintain `Migrations` for official or production database in order to apply new migrations
+- if you lost Migrations folder on an official db a workaround to reget in sync is the following:
+    - from psql `create database anotherdb`
+    - tune `config.json` to point `anotherdb`
+    - remove `srvapp/Migrations` folder if any
+    - issue an `./add-migr.sh`
+    - edit `__EFMigrationsHistory` on official database so that equals to `anotherdb` table ( should there only 1 row `MigrationId`,`ProductVersion` )
+    - gets back `config.json` to official database name
+    - now if your official database was in sync with latest code-first changes you can run another `./add-migr.sh` without errors
+    - if your official db was out of sync you need to integrate by hand what missed and here you can inspect the `srvapp/Migrations` folder converted to SQL scripts using following `cd srvapp; dotnet ef migrations script > manual.sql` then applying some of `manual.sql` depending on whats lacks
+
+- an experimental tool that take care to backup automatically migrations is provided (see below), this way you have not to worry about migrations backup because db have its own. :family: If you working in team on a common database you have to apply follow procedure before any db `./add-migr.sh` command:
+    - pull latest sources
+    - ./restore-migr.sh
+then
+    - commit/push your sources
+
+### backup migrations
+
+this task is automatically applied just after `./add-migr.sh` and provied to zip `Migrations` folder copying to database `migrations_backup` table
+
+or run manually through `./backup-migr.sh`
+
+output
+
+```sh
+devel0@tuf:~/Documents/opensource/skeleton-netcore-ef-react-ts$ ./backup-migr.sh 
+---> backup migrations from [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations] to db
+  - zipping
+  - copying to db
+```
+
+### restore migrations
+
+`./restore-migr.sh`
+
+output
+
+```sh
+devel0@tuf:~/Documents/opensource/skeleton-netcore-ef-react-ts$ ./restore-migr.sh 
+this will replace [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations] with data from db migrations backup.
+press a key to continue or CTRL+C to abort
+
+---> restore migrations from db to [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations]
+  - copying from db
+  - found    6.4 Kb size migrations zip
+  - extracting to [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations]
+```
+
+### automatic backup/restore migration test
+
+```sh
+devel0@tuf:~/Documents/opensource/skeleton-netcore-ef-react-ts$ ./add-migr.sh 
+---> creating migration [migr-2020-01-12T10:14:13+00:00]
+...
+---> updating database
+...
+---> backup migrations
+---> backup migrations from [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations] to db
+  - zipping
+  - copying to db
+If you working on a shared db is suggested to commit/push your sources now so that other developers can restore migrations from database with accordingly code-first sources
+```
+
+- simulate deletion of Migrations folder
+
+```sh
+rm -fr srvapp/Migrations
+```
+
+- try `./add-migr.sh` again and you'll receive error
+
+```sh
+devel0@tuf:~/Documents/opensource/skeleton-netcore-ef-react-ts$ ./add-migr.sh 
+---> creating migration [migr-2020-01-12T10:16:49+00:00]
+...
+---> updating database
+...
+42P07: relation "migrations_backup" already exists
+*** skip backup migrations
+```
+
+- recover using `./restore-migr.sh`
+
+```sh
+devel0@tuf:~/Documents/opensource/skeleton-netcore-ef-react-ts$ ./restore-migr.sh 
+this will replace [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations] with data from db migrations backup.
+press a key to continue or CTRL+C to abort
+
+---> restore migrations from db to [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations]
+  - copying from db
+  - found   10.1 Kb size migrations zip
+  - extracting to [/home/devel0/Documents/opensource/skeleton-netcore-ef-react-ts/srvapp/Migrations]
+```
+
+- now `./add-migr.sh` will work again
 
 ## description of example
 

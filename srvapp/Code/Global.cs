@@ -54,6 +54,11 @@ namespace srvapp
             get { return Path.Combine(AppFolder, "config.json.bak"); }
         }
 
+        public string MigrationsBackupPathfilename
+        {
+            get { return Path.Combine(AppFolder, "Migrations.zip"); }            
+        }
+
         private readonly ILogger<Global> logger;
 
         public Config Config { get; private set; }

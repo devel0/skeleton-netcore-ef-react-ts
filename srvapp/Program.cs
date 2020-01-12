@@ -12,6 +12,8 @@ namespace srvapp
 
         public static void Main(string[] args)
         {
+            MigrationsTools.CheckMigrationsToolCmdline(args);            
+
             MainStarted = true;
 
             var g = new Global(null);

@@ -174,6 +174,7 @@ namespace srvapp
             // MAPPING ( **note** : ORDER ENTITY DECLARATIONS )
             //            
 
+            builder.Entity<MigrationsBackup>();
             builder.Entity<SampleTable>();
 
             //

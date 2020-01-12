@@ -7,7 +7,8 @@ executing_dir()
 exdir=$(executing_dir)
 
 cd "$exdir"/srvapp
-migrname="migr-$(uuid -F siv)"
+#migrname="migr-$(uuid -F siv)"
+migrname="migr-$(date -u -Is)"
 
 echo "---> creating migration [$migrname]"
 dotnet ef migrations add $migrname
@@ -15,4 +16,13 @@ dotnet ef migrations add $migrname
 echo "---> updating database"
 dotnet ef database update
 
-cd "$exdir"
+if [ "$?" != "0" ]; then
+	echo "*** skip backup migrations"
+else
+	echo "---> backup migrations"
+	"$exdir"/backup-migr.sh
+
+	cd "$exdir"
+
+	echo "If you working on a shared db is suggested to commit/push your sources now so that other developers can restore migrations from database with accordingly code-first sources"
+fi
