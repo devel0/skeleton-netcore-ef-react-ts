@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -61,18 +63,47 @@ namespace srvapp
             });
         }
 
+        public static string ExceptionDetail(Exception ex)
+        {
+            var msg = ex.Message;
+
+            if (ex.InnerException != null && ex.InnerException is Npgsql.PostgresException)
+            {
+                var npgsqlex = ex.InnerException as Npgsql.PostgresException;
+                msg = $"{npgsqlex.Message}: {npgsqlex.Detail}";
+            }
+            return msg;
+        }
+
+        public static CommonResponse ErrorResponse(Exception ex)
+        {
+            var basePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(
+                System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory))));
+
+            var st = ex.StackTrace;
+            if (Directory.Exists(basePath))
+                st = st.Replace(basePath, "");
+
+            return new CommonResponse()
+            {
+                exitCode = CommonResponseExitCodes.Error,
+                errorMsg = ExceptionDetail(ex),
+                stackTrace = st
+            };
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             System.Console.WriteLine($"---> env.EnvironmentName=[{env.EnvironmentName}] ; env.IsDevelopment={env.IsDevelopment()}");
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                //app.UseExceptionHandler("/Error");
+                //app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error");
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

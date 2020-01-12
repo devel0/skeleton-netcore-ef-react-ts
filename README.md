@@ -4,6 +4,7 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 
 ---
 
+- [recent changes](#recent-changes)
 - [features](#features)
 - [requirements](#requirements)
 - [quickstart](#quickstart)
@@ -13,6 +14,11 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 ---
 
 ![](doc/example.gif)
+
+## recent changes
+
+- react-scripts 3.3.0 ( support optional chaining )
+- centralized webapi try catch
 
 ## features
 
