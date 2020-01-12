@@ -34,7 +34,7 @@ namespace srvapp
 
             services.AddMvc().AddNewtonsoftJson((o) =>
             {
-                o.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;                
+                o.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
             });
 
             // MY SINGLETONS
@@ -95,6 +95,8 @@ namespace srvapp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //UpdateDatabase(app);
+
             System.Console.WriteLine($"---> env.EnvironmentName=[{env.EnvironmentName}] ; env.IsDevelopment={env.IsDevelopment()}");
             if (env.IsDevelopment())
             {
@@ -131,6 +133,19 @@ namespace srvapp
                 }
             });
         }
+
+        // private void UpdateDatabase(IApplicationBuilder app)
+        // {
+        //     using (var serviceScope = app.ApplicationServices
+        //         .GetRequiredService<IServiceScopeFactory>()
+        //         .CreateScope())
+        //     {
+        //         using (var context = serviceScope.ServiceProvider.GetService<MyDbContext>())
+        //         {
+        //             context.Database.Migrate();
+        //         }
+        //     }
+        // }
 
         public static void SetupDbContextOptions(DbContextOptionsBuilder o, Global global)
         {
