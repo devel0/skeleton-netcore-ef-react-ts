@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import { Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent } from "@material-ui/core";
+import ReactHtmlParser from 'react-html-parser'; 
 
 export enum AlertDialogButtons {
     Yes, No, Cancel
@@ -86,7 +87,9 @@ export default function AlertDialog(props: AlertDialogProps) {
             >
                 <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">{props.msg}</DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        {ReactHtmlParser(props.msg)}
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <AlertDialogBtns {...props} />

@@ -17,6 +17,7 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 
 ## recent changes
 
+- dialog `msg` interpret html
 - react-scripts 3.3.0 ( support optional chaining )
 - centralized webapi try catch
 
@@ -26,6 +27,7 @@ skeleton for netcore, db ef code-first ( server side ) + react typescript, json 
 - server side
     - net core ef code-first ( with reverse db diagram and typescript generation )
     - net core webapi http2
+    - db triggers [example](https://github.com/devel0/skeleton-netcore-ef-react-ts/blob/0ab3f72a1505170e2856b9de0bae2cd7cacdc55c/srvapp/MyDbContext.cs#L147)
 - client side
     - react typescript ( babel, rollup, webpack )
     - json with [preserve reference](https://github.com/devel0/json-serialize-refs#readme) that allow circular refs
@@ -99,6 +101,14 @@ echo "create database srvdb | psql -h localhost -U postgres"
 
 - from `CTRL+SHIFT+D` select `.NET Core Launch (web)`
 - hit F5 from vscode to start server-client
+
+**add other packages**
+
+```sh
+cd srvapp/ClientApp
+npm install other-lib --save
+npm install @types/other-lib --save-dev
+```
 
 ## build and run container
 
