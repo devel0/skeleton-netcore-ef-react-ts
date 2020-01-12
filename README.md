@@ -166,9 +166,7 @@ then
 
 ### backup migrations
 
-this task is automatically applied just after `./add-migr.sh` and provied to zip `Migrations` folder copying to database `migrations_backup` table
-
-or run manually through `./backup-migr.sh`
+this task is automatically applied just after `./add-migr.sh` and provides to zip `Migrations` folder copying that file to database `migrations_backup` table; it can run either manually through `./backup-migr.sh`
 
 output
 
