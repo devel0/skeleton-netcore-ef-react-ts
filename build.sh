@@ -19,6 +19,11 @@ touch "$exdir"/srvapp/ClientApp/.yalc
 
 docker build -t $image -f "$TMPDK" "$exdir"/.
 
+if [ "$?" != "0" ]; then
+    echo "image build failed"
+    exit 1
+fi
+
 # uncomment follow to push on remote repository
 # docker push $image
 
