@@ -13,6 +13,11 @@ migrname="migr-$(date -u -Is)"
 echo "---> creating migration [$migrname]"
 dotnet ef migrations add $migrname
 
+if [ "$?" != "0" ]; then
+	echo "*** err"
+	exit 1
+fi
+
 echo "---> updating database"
 dotnet ef database update
 
