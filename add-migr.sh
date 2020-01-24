@@ -23,6 +23,8 @@ dotnet ef database update
 
 if [ "$?" != "0" ]; then
 	echo "*** skip backup migrations"
+	echo "*** removing failed db update migration"
+        dotnet ef migrations remove
 else
 	echo "---> backup migrations"
 	"$exdir"/backup-migr.sh
